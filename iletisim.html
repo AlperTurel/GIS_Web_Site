@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <style>
+    /* (CSS kısmı aynen önceki gibi, değiştirmeye gerek yok) */
     :root {
       --bg: #0a0a0f;
       --surface: #111118;
@@ -451,21 +452,48 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-  const lat = 39.910938;
-  const lng = 32.751530;
+  // Mustafa Kemal, 2082. Cd. No:52, 06510 Çankaya / Ankara
+  const lat = 39.9019;
+  const lng = 32.7982;
 
+  // Haritayı oluştur
   const map = L.map('map', {
     center: [lat, lng],
-    zoom: 15,
+    zoom: 16,
     zoomControl: true,
     scrollWheelZoom: false
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Katman tanımları
+  const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 19
-  }).addTo(map);
+  });
 
+  const cartoLightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    attribution: '© CARTO, © OpenStreetMap contributors',
+    maxZoom: 19
+  });
+
+  const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenTopoMap contributors',
+    maxZoom: 17
+  });
+
+  // Base katmanları ekle (normal, siyasi, fiziksel)
+  const baseLayers = {
+    "Normal Harita (OpenStreetMap)": osmLayer,
+    "Siyasi Harita (CartoDB)": cartoLightLayer,
+    "Fiziksel Harita (OpenTopoMap)": topoLayer
+  };
+
+  // Varsayılan katmanı ekle
+  osmLayer.addTo(map);
+
+  // Katman kontrolü ekle
+  L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+
+  // Özel işaretçi
   const goldIcon = L.divIcon({
     html: `
       <div style="
@@ -531,5 +559,4 @@
 </script>
 
 </body>
-
 </html>
